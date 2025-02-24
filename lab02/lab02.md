@@ -62,7 +62,16 @@
 запросы и ответы со стороны сервиса для **всех** его операций.
 
 #### Демонстрация работы
-todo
+#### POST /product
+![alt text](image.png)
+#### GET /product/{product_id}
+![alt text](image-1.png)
+#### PUT /product/{product_id}
+![alt text](image-2.png)
+#### DELETE /product/{product_id}
+![alt text](image-3.png)
+#### GET /products
+![alt text](image-4.png)
 
 ### Задание В (4 балла)
 Пусть ваш продукт также имеет иконку (небольшую картинку). Формат иконки (картинки) может
@@ -84,8 +93,10 @@ todo
 ```
 
 #### Демонстрация работы
-todo
-
+#### POST product/{product_id}/image
+![alt text](image-5.png)
+#### GET product/{product_id}/image
+![alt text](image-6.png)
 ---
 
 _(*) В последующих домашних заданиях вам будет предложено расширить функционал данного сервиса._
