@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"net"
 	"os"
+	"strconv"
 	"sync"
 )
 
@@ -12,11 +13,19 @@ var mu sync.Mutex
 
 func main() {
 	if len(os.Args) != 2 {
-		fmt.Println("Usage: server.exe <port>")
+		fmt.Println("Usage: server.exe <port> <concurrency_level>")
 		os.Exit(1)
 	}
 
 	port := os.Args[1]
+	concurrencyLevel, err := strconv.Atoi(os.Args[2])
+	if err != nil {
+		fmt.Println("concurrency_level must be an integer")
+		os.Exit(1)
+	}
+
+	sem := make(chan struct{}, concurrencyLevel)
+
 	listener, err := net.Listen("tcp", ":"+port)
 	if err != nil {
 		fmt.Println("Error while running server:", err)
@@ -38,11 +47,11 @@ func main() {
 			continue
 		}
 
-		handleInitialConnection(conn)
+		handleInitialConnection(conn, sem)
 	}
 }
 
-func handleInitialConnection(conn net.Conn) {
+func handleInitialConnection(conn net.Conn, sem chan struct{}) {
 	defer func(conn net.Conn) {
 		err := conn.Close()
 		if err != nil {
@@ -57,7 +66,7 @@ func handleInitialConnection(conn net.Conn) {
 	mu.Unlock()
 
 	ready := make(chan struct{})
-	go startNewServer(newPort, ready)
+	go startNewServer(newPort, ready, sem)
 	<-ready
 	fmt.Println("Sending port:", newPort)
 	_, err := fmt.Fprintf(conn, "%d\n", newPort)
@@ -67,7 +76,7 @@ func handleInitialConnection(conn net.Conn) {
 	}
 }
 
-func startNewServer(port int, ready chan struct{}) {
+func startNewServer(port int, ready chan struct{}, sem chan struct{}) {
 	listener, err := net.Listen("tcp", fmt.Sprintf(":%d", port))
 	if err != nil {
 		fmt.Println("Error starting server on port", port, ":", err)
@@ -90,5 +99,18 @@ func startNewServer(port int, ready chan struct{}) {
 		fmt.Println("Error while accepting connection", port, ":", err)
 		return
 	}
-	go handleConnection(conn)
+
+	sem <- struct{}{}
+
+	go func() {
+		defer func() {
+			<-sem
+			err := conn.Close()
+			if err != nil {
+				fmt.Println("Error while closing connection:", err)
+				os.Exit(1)
+			}
+		}()
+		handleConnection(conn)
+	}()
 }

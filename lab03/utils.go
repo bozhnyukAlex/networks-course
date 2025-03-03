@@ -9,14 +9,6 @@ import (
 )
 
 func handleConnection(conn net.Conn) {
-	defer func(conn net.Conn) {
-		err := conn.Close()
-		if err != nil {
-			fmt.Println("Error while closing connection:", err)
-			os.Exit(1)
-		}
-	}(conn)
-
 	reader := bufio.NewReader(conn)
 	requestLine, err := reader.ReadString('\n')
 	if err != nil {
