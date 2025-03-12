@@ -2,12 +2,25 @@ package main
 
 import (
 	"bytes"
+	"crypto/md5"
+	"encoding/hex"
 	"io"
 	"log"
 	"net/http"
 	"os"
+	"path/filepath"
 	"strings"
 )
+
+type CacheEntry struct {
+	LastModified string
+	ETag         string
+	FilePath     string
+}
+
+var cache = make(map[string]CacheEntry)
+
+const cacheDir = "./cache"
 
 func copyHeader(dst, src http.Header) {
 	for k, vv := range src {
@@ -50,6 +63,12 @@ func parseTargetURL(path string) (string, error) {
 	return targetURL, nil
 }
 
+func getCacheFilePath(url string) string {
+	hash := md5.Sum([]byte(url))
+	hashStr := hex.EncodeToString(hash[:])
+	return filepath.Join(cacheDir, hashStr)
+}
+
 func handler(writer http.ResponseWriter, request *http.Request) {
 	if request.Method != "GET" && request.Method != "POST" {
 		http.Error(writer, "Only GET and POST methods are supported", http.StatusMethodNotAllowed)
@@ -64,6 +83,75 @@ func handler(writer http.ResponseWriter, request *http.Request) {
 		targetURL, err = parseTargetURL(request.URL.Path)
 		if err != nil {
 			http.Error(writer, "Bad Request", http.StatusBadRequest)
+			return
+		}
+	}
+
+	if entry, ok := cache[targetURL]; ok {
+		req, err := http.NewRequest("GET", targetURL, nil)
+		if err != nil {
+			http.Error(writer, "Bad Request", http.StatusBadRequest)
+			return
+		}
+		if entry.LastModified != "" {
+			req.Header.Set("If-Modified-Since", entry.LastModified)
+		}
+		if entry.ETag != "" {
+			req.Header.Set("If-None-Match", entry.ETag)
+		}
+		copyHeader(req.Header, request.Header)
+		removeHopByHopHeaders(req.Header)
+
+		client := &http.Client{}
+		resp, err := client.Do(req)
+		if err != nil {
+			http.Error(writer, "Error forwarding request", http.StatusInternalServerError)
+			return
+		}
+		defer resp.Body.Close()
+
+		if resp.StatusCode == http.StatusNotModified {
+			// object not changed, get from cache
+			file, err := os.Open(entry.FilePath)
+			if err != nil {
+				http.Error(writer, "Error reading cache", http.StatusInternalServerError)
+				return
+			}
+			defer file.Close()
+			_, err = io.Copy(writer, file)
+			if err != nil {
+				log.Printf("Error copying cache to response: %v", err)
+			}
+			log.Printf("Served from cache: %s", targetURL)
+			return
+		} else if resp.StatusCode == http.StatusOK {
+			// object changed, update cache
+			cacheFilePath := getCacheFilePath(targetURL)
+			cacheFile, err := os.Create(cacheFilePath)
+			if err != nil {
+				http.Error(writer, "Error creating cache file", http.StatusInternalServerError)
+				return
+			}
+			defer cacheFile.Close()
+			_, err = io.Copy(cacheFile, resp.Body)
+			if err != nil {
+				log.Printf("Error writing to cache: %v", err)
+			}
+			lastModified := resp.Header.Get("Last-Modified")
+			etag := resp.Header.Get("ETag")
+			cache[targetURL] = CacheEntry{
+				LastModified: lastModified,
+				ETag:         etag,
+				FilePath:     cacheFilePath,
+			}
+			copyHeader(writer.Header(), resp.Header)
+			removeHopByHopHeaders(writer.Header())
+			writer.WriteHeader(resp.StatusCode)
+			_, err = io.Copy(writer, resp.Body)
+			if err != nil {
+				log.Printf("Error copying response body: %v", err)
+			}
+			log.Printf("Updated cache and served: %s", targetURL)
 			return
 		}
 	}
@@ -99,6 +187,26 @@ func handler(writer http.ResponseWriter, request *http.Request) {
 		return
 	}
 	defer resp.Body.Close()
+
+	cacheFilePath := getCacheFilePath(targetURL)
+	cacheFile, err := os.Create(cacheFilePath)
+	if err != nil {
+		http.Error(writer, "Error creating cache file", http.StatusInternalServerError)
+		return
+	}
+	defer cacheFile.Close()
+	_, err = io.Copy(cacheFile, resp.Body)
+	if err != nil {
+		log.Printf("Error writing to cache: %v", err)
+	}
+
+	lastModified := resp.Header.Get("Last-Modified")
+	etag := resp.Header.Get("ETag")
+	cache[targetURL] = CacheEntry{
+		LastModified: lastModified,
+		ETag:         etag,
+		FilePath:     cacheFilePath,
+	}
 
 	copyHeader(writer.Header(), resp.Header)
 	removeHopByHopHeaders(writer.Header())

@@ -7,3 +7,6 @@
 2025/03/11 23:46:38 Proxied request to http://httpbin.org/post, status code: 405
 2025/03/11 23:48:07 Proxied request to http://httpbin.org/post, status code: 200
 2025/03/11 23:48:45 Proxied POST request to http://httpbin.org/post, status code: 200
+2025/03/13 00:26:12 Proxied GET request to http://www.google.com/, status code: 302
+2025/03/13 00:26:14 Updated cache and served: http://www.google.com/
+2025/03/13 00:26:35 Updated cache and served: http://www.google.com/
