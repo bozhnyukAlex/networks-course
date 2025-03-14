@@ -10,3 +10,4 @@
 2025/03/13 00:26:12 Proxied GET request to http://www.google.com/, status code: 302
 2025/03/13 00:26:14 Updated cache and served: http://www.google.com/
 2025/03/13 00:26:35 Updated cache and served: http://www.google.com/
+2025/03/14 23:30:38 Blocked access to http://example.com/

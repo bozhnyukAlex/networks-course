@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bufio"
 	"bytes"
 	"crypto/md5"
 	"encoding/hex"
@@ -47,6 +48,34 @@ func removeHopByHopHeaders(header http.Header) {
 	}
 }
 
+var blacklist []string
+
+func loadBlackList(filename string) error {
+	file, err := os.Open(filename)
+	if err != nil {
+		return err
+	}
+	defer file.Close()
+
+	scanner := bufio.NewScanner(file)
+	for scanner.Scan() {
+		line := strings.TrimSpace(scanner.Text())
+		if line != "" {
+			blacklist = append(blacklist, line)
+		}
+	}
+	return scanner.Err()
+}
+
+func isBlocked(url string) bool {
+	for _, blocked := range blacklist {
+		if strings.HasPrefix(url, blocked) || strings.Contains(url, blocked) {
+			return true
+		}
+	}
+	return false
+}
+
 func parseTargetURL(path string) (string, error) {
 	if strings.HasPrefix(path, "/") {
 		path = path[1:]
@@ -85,6 +114,13 @@ func handler(writer http.ResponseWriter, request *http.Request) {
 			http.Error(writer, "Bad Request", http.StatusBadRequest)
 			return
 		}
+	}
+
+	if isBlocked(targetURL) {
+		writer.WriteHeader(http.StatusForbidden)
+		io.WriteString(writer, "Access to this page is blocked by the proxy server.")
+		log.Printf("Blocked access to %s", targetURL)
+		return
 	}
 
 	if entry, ok := cache[targetURL]; ok {
@@ -229,6 +265,11 @@ func main() {
 		log.Fatal("Cannot open log file:", err)
 	}
 	log.SetOutput(logFile)
+	err = loadBlackList("blackList.txt")
+	if err != nil {
+		log.Fatal("Error while loading blackList:", err.Error())
+		return
+	}
 
 	http.HandleFunc("/", handler)
 	log.Fatal(http.ListenAndServe(":8888", nil))
