@@ -272,7 +272,7 @@ func downloadFile(conn net.Conn, remoteFile, localFile string) error {
 	return nil
 }
 
-func main() {
+func main1() {
 	flag.StringVar(&server, "server", "", "FTP-server address")
 	flag.StringVar(&username, "user", "", "FTP user")
 	flag.StringVar(&password, "pass", "", "FTP password")
