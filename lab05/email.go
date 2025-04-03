@@ -8,10 +8,10 @@ import (
 )
 
 const (
-	senderEmail    = "alex.bog182@gmail.com"
+	senderEmail    = "st076644@student.spbu.ru"
 	senderPassword = "<!!!>"
-	smtpHost       = "smtp.mail.ru"
-	smtpPort       = "465"
+	smtpHost       = "mail.spbu.ru"
+	smtpPort       = "25"
 )
 
 func sendEmail(to, subject, body, format string) error {
