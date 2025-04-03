@@ -99,7 +99,7 @@ func main() {
 		password := passwordEntry.Text
 
 		var err error
-		client, err = ftp.Dial(addr + ":21")
+		client, err = ftp.Dial(addr)
 		if err != nil {
 			output.SetText(fmt.Sprintf("Connection error: %v", err))
 			return
