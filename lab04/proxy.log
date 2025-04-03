@@ -1,0 +1,14 @@
+2025/03/11 23:23:37 Proxied request to http://www.google.com/, status code: 302
+2025/03/11 23:25:12 Proxied request to http://emkn.ru/, status code: 301
+2025/03/11 23:33:51 Proxied request to http://www.example.com/nonexistent, status code: 404
+2025/03/11 23:34:19 Proxied request to http://www.example.com/nonexistent, status code: 404
+2025/03/11 23:34:35 Proxied request to http://www.gogle.com/, status code: 301
+2025/03/11 23:35:29 Proxied request to http://www.google.com/nonexist, status code: 404
+2025/03/11 23:46:38 Proxied request to http://httpbin.org/post, status code: 405
+2025/03/11 23:48:07 Proxied request to http://httpbin.org/post, status code: 200
+2025/03/11 23:48:45 Proxied POST request to http://httpbin.org/post, status code: 200
+2025/03/13 00:26:12 Proxied GET request to http://www.google.com/, status code: 302
+2025/03/13 00:26:14 Updated cache and served: http://www.google.com/
+2025/03/13 00:26:35 Updated cache and served: http://www.google.com/
+2025/03/14 23:30:38 Blocked access to http://example.com/
+2025/03/14 23:33:17 Proxied GET request to http://www.google.com/, status code: 302
