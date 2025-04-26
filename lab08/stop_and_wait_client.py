@@ -112,7 +112,7 @@ class StopAndWaitClient:
 
 if __name__ == "__main__":
     if len(sys.argv) != 7:
-        print("Usage: python client.py <server_address> <server_port> <filename> <packet_size> <timeout> <loss_rate>")
+        print("Usage: python stop_and_wait_client.py <server_address> <server_port> <filename> <packet_size> <timeout> <loss_rate>")
         sys.exit(1)
 
     server_address = sys.argv[1]
