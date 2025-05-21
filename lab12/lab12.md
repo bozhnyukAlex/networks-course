@@ -184,4 +184,5 @@ todo
 <img src="images/port-translator.png" width=600 />
 
 #### Демонстрация работы
-todo
+![alt text](image-5.png)
+![alt text](image-4.png)

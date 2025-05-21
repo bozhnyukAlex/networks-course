@@ -1,0 +1,9 @@
+[
+  {
+    "name": "yandex",
+    "internal_ip": "127.0.0.1",
+    "internal_port": 9228,
+    "external_ip": "93.158.134.11",
+    "external_port": 80
+  }
+]
