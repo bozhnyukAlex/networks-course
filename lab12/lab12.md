@@ -55,6 +55,95 @@ Simulation step 3 of router 42.162.54.248
 Бонус: Не используйте общую память, а вместо этого реализуйте общение потоков через 
 сокеты **(+3 балла)**.
 
+```
+------------------------------------------------------------
+Simulation step 1
+------------------------------------------------------------
+Simulation step 1 of router R1
+[Source IP]      [Destination IP]    [Next Hop]       [Metric]  
+R1              R1              R1              0
+R1              R2              R2              1
+R1              R3              R3              1
+R1              R4              R4              2
+R1              R5              R5              2
+
+Simulation step 1 of router R2
+[Source IP]      [Destination IP]    [Next Hop]       [Metric]
+R2              R1              R1              1
+R2              R2              R2              0
+R2              R3              R3              1
+R2              R4              R4              2
+R2              R5              R5              1
+
+Simulation step 1 of router R3
+[Source IP]      [Destination IP]    [Next Hop]       [Metric]
+R3              R1              R1              1
+R3              R2              R2              1
+R3              R3              R3              0
+R3              R4              R4              1
+R3              R5              R5              2
+
+Simulation step 1 of router R4
+[Source IP]      [Destination IP]    [Next Hop]       [Metric]
+R4              R1              R1              2
+R4              R2              R2              2
+R4              R3              R3              1
+R4              R4              R4              0
+R4              R5              R5              1
+
+Simulation step 1 of router R5
+[Source IP]      [Destination IP]    [Next Hop]       [Metric]
+R5              R1              R1              2
+R5              R2              R2              1
+R5              R3              R3              2
+R5              R4              R4              1
+R5              R5              R5              0
+
+
+------------------------------------------------------------
+Simulation step 2
+------------------------------------------------------------
+Simulation step 2 of router R1
+[Source IP]      [Destination IP]    [Next Hop]       [Metric]  
+R1              R1              R1              0
+R1              R2              R2              1
+R1              R3              R3              1
+R1              R4              R4              2
+R1              R5              R5              2
+
+Simulation step 2 of router R2
+[Source IP]      [Destination IP]    [Next Hop]       [Metric]
+R2              R1              R1              1
+R2              R2              R2              0
+R2              R3              R3              1
+R2              R4              R4              2
+R2              R5              R5              1
+
+Simulation step 2 of router R3
+[Source IP]      [Destination IP]    [Next Hop]       [Metric]
+R3              R1              R1              1
+R3              R2              R2              1
+R3              R3              R3              0
+R3              R4              R4              1
+R3              R5              R5              2
+
+Simulation step 2 of router R4
+[Source IP]      [Destination IP]    [Next Hop]       [Metric]
+R4              R1              R1              2
+R4              R2              R2              2
+R4              R3              R3              1
+R4              R4              R4              0
+R4              R5              R5              1
+
+Simulation step 2 of router R5
+[Source IP]      [Destination IP]    [Next Hop]       [Metric]
+R5              R1              R1              2
+R5              R2              R2              1
+R5              R3              R3              2
+R5              R4              R4              1
+R5              R5              R5              0
+```
+
 ## Скорость передачи (6 баллов)
 Реализуйте программу, которая измеряет скорость передачи информации по протоколам TCP и
 UDP, а также выводит количество потерянных пакетов.
