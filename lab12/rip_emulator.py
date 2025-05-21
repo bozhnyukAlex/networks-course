@@ -86,6 +86,7 @@ def main():
     if len(sys.argv) < 2:
         print("Usage: python rip_emulator.py [json_file | random]")
         return
+
     option = sys.argv[1]
     if option.endswith('.json'):
         try:
@@ -95,30 +96,40 @@ def main():
             return
     else:
         network = generate_random_network()
-    
+
     if not network:
         print("Network is empty.")
         return
-    
+
     for router in network.values():
         router.initialize_table()
-    
+
+    step = 0
     changes = True
     while changes:
         changes = False
+
         for r in network.values():
             r.pending_updates.clear()
+
         for r in network.values():
             r.send_updates(network)
+
         for r in network.values():
             if r.process_updates():
                 changes = True
-    
-    for r in network.values():
-        print(f"Final state of router {r.ip} table:")
-        print("[Source IP]      [Destination IP]    [Next Hop]       [Metric]  ")
-        for dest, (next_hop, metric) in sorted(r.routing_table.items()):
-            print(f"{r.ip:<15} {dest:<15} {next_hop:<15} {metric}")
+
+        step += 1
+        print(f"\n{'-' * 60}")
+        print(f"Simulation step {step}")
+        print(f"{'-' * 60}")
+        for r in network.values():
+            print(f"Simulation step {step} of router {r.ip}")
+            print("[Source IP]      [Destination IP]    [Next Hop]       [Metric]  ")
+            for dest, (next_hop, metric) in sorted(r.routing_table.items()):
+                print(f"{r.ip:<15} {dest:<15} {next_hop:<15} {metric}")
+            print()
+
 
 if __name__ == "__main__":
     main()

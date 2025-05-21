@@ -43,7 +43,9 @@ Simulation step 3 of router 42.162.54.248
 ```
 
 #### Демонстрация работы
-todo
+![alt text](image-1.png)
+![alt text](image-2.png)
+![alt text](image-3.png)
 
 ### Задание В (2 балла)
 
