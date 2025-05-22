@@ -27,7 +27,7 @@ Final state of router 198.71.243.61 table:
 Приведите скрин или лог работы программы.
 
 #### Демонстрация работы
-todo
+![alt text](image.png)
 
 ### Задание Б (1 балл)
 Выведите на консоль промежуточные этапы работы протокола: по каждому маршрутизатору
@@ -43,7 +43,9 @@ Simulation step 3 of router 42.162.54.248
 ```
 
 #### Демонстрация работы
-todo
+![alt text](image-1.png)
+![alt text](image-2.png)
+![alt text](image-3.png)
 
 ### Задание В (2 балла)
 
@@ -52,6 +54,95 @@ todo
 
 Бонус: Не используйте общую память, а вместо этого реализуйте общение потоков через 
 сокеты **(+3 балла)**.
+
+```
+------------------------------------------------------------
+Simulation step 1
+------------------------------------------------------------
+Simulation step 1 of router R1
+[Source IP]      [Destination IP]    [Next Hop]       [Metric]  
+R1              R1              R1              0
+R1              R2              R2              1
+R1              R3              R3              1
+R1              R4              R4              2
+R1              R5              R5              2
+
+Simulation step 1 of router R2
+[Source IP]      [Destination IP]    [Next Hop]       [Metric]
+R2              R1              R1              1
+R2              R2              R2              0
+R2              R3              R3              1
+R2              R4              R4              2
+R2              R5              R5              1
+
+Simulation step 1 of router R3
+[Source IP]      [Destination IP]    [Next Hop]       [Metric]
+R3              R1              R1              1
+R3              R2              R2              1
+R3              R3              R3              0
+R3              R4              R4              1
+R3              R5              R5              2
+
+Simulation step 1 of router R4
+[Source IP]      [Destination IP]    [Next Hop]       [Metric]
+R4              R1              R1              2
+R4              R2              R2              2
+R4              R3              R3              1
+R4              R4              R4              0
+R4              R5              R5              1
+
+Simulation step 1 of router R5
+[Source IP]      [Destination IP]    [Next Hop]       [Metric]
+R5              R1              R1              2
+R5              R2              R2              1
+R5              R3              R3              2
+R5              R4              R4              1
+R5              R5              R5              0
+
+
+------------------------------------------------------------
+Simulation step 2
+------------------------------------------------------------
+Simulation step 2 of router R1
+[Source IP]      [Destination IP]    [Next Hop]       [Metric]  
+R1              R1              R1              0
+R1              R2              R2              1
+R1              R3              R3              1
+R1              R4              R4              2
+R1              R5              R5              2
+
+Simulation step 2 of router R2
+[Source IP]      [Destination IP]    [Next Hop]       [Metric]
+R2              R1              R1              1
+R2              R2              R2              0
+R2              R3              R3              1
+R2              R4              R4              2
+R2              R5              R5              1
+
+Simulation step 2 of router R3
+[Source IP]      [Destination IP]    [Next Hop]       [Metric]
+R3              R1              R1              1
+R3              R2              R2              1
+R3              R3              R3              0
+R3              R4              R4              1
+R3              R5              R5              2
+
+Simulation step 2 of router R4
+[Source IP]      [Destination IP]    [Next Hop]       [Metric]
+R4              R1              R1              2
+R4              R2              R2              2
+R4              R3              R3              1
+R4              R4              R4              0
+R4              R5              R5              1
+
+Simulation step 2 of router R5
+[Source IP]      [Destination IP]    [Next Hop]       [Metric]
+R5              R1              R1              2
+R5              R2              R2              1
+R5              R3              R3              2
+R5              R4              R4              1
+R5              R5              R5              0
+```
 
 ## Скорость передачи (6 баллов)
 Реализуйте программу, которая измеряет скорость передачи информации по протоколам TCP и
@@ -70,7 +161,7 @@ UDP, а также выводит количество потерянных па
 <img src="images/tcp.png" width=700 />
 
 #### Демонстрация работы
-todo
+![alt text](image-6.png)
 
 ### 2. Измерение по протоколу UDP (3 балла)
 Пример интерфейса:
@@ -78,7 +169,7 @@ todo
 <img src="images/udp.png" width=700 />
 
 #### Демонстрация работы
-todo
+![alt text](image-7.png)
    
 
 ## Транслятор портов (6 баллов)
@@ -93,4 +184,5 @@ todo
 <img src="images/port-translator.png" width=600 />
 
 #### Демонстрация работы
-todo
+![alt text](image-5.png)
+![alt text](image-4.png)
